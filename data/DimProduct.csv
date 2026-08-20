@@ -1,0 +1,22 @@
+product_id,product_name,product_category,list_price,unit_cost
+1,ScanPro X200,Diagnostic Devices,823.52,529.32
+2,ScanPro X400,Diagnostic Devices,1859.48,869.25
+3,PulseCheck Mini,Diagnostic Devices,827.18,428.42
+4,PulseCheck Pro,Diagnostic Devices,323.12,204.85
+5,VitalTrack Home,Diagnostic Devices,528.23,270.34
+6,PrecisionBlade S1,Surgical Instruments,441.8,202.95
+7,PrecisionBlade S2,Surgical Instruments,120.11,77.26
+8,ClampMaster,Surgical Instruments,188.77,93.64
+9,SutureKit Advanced,Surgical Instruments,603.18,339.37
+10,SteriGlove Box-100,Consumables,579.74,303.54
+11,SteriGlove Box-200,Consumables,583.49,372.45
+12,IV Line Set,Consumables,650.29,395.69
+13,Wound Dressing Pack,Consumables,232.76,113.06
+14,CardioMonitor 3000,Monitoring Equipment,1191.81,616.93
+15,CardioMonitor 5000,Monitoring Equipment,1365.66,795.97
+16,O2 Sensor Clip,Monitoring Equipment,609.58,350.66
+17,RemoteVitals Hub,Monitoring Equipment,721.87,373.03
+18,FlexWalk Cane,Mobility Aids,36.79,20.77
+19,FlexWalk Frame,Mobility Aids,819.01,488.55
+20,GlideChair Standard,Mobility Aids,67.45,34.35
+21,GlideChair Deluxe,Mobility Aids,43.25,23.36

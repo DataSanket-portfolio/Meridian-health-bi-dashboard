@@ -1,0 +1,121 @@
+hospital_id,hospital_name,region,country,hospital_type,organization_size,customer_since
+1,New Sandra General Hospital,Hesse,Germany,Specialty Center,Small,2024-08-04
+2,New Jeffrey General Hospital,Auvergne-Rhone-Alpes,France,University Hospital,Medium,2024-03-01
+3,West Teresa University Hospital,North Holland,Netherlands,University Hospital,Medium,2023-06-30
+4,East Christopher Clinic,Zurich,Switzerland,University Hospital,Large,2022-09-05
+5,Jamesmouth General Hospital,Zurich,Switzerland,Private Clinic,Small,2025-04-19
+6,Hendersonland Clinic,Bavaria,Germany,Specialty Center,Small,2023-04-23
+7,Jasonmouth Medical Center,Vienna,Austria,University Hospital,Small,2024-01-10
+8,Ralphfurt University Hospital,Zurich,Switzerland,University Hospital,Small,2024-11-27
+9,South Juliechester Clinic,Hesse,Germany,Public Hospital Network,Medium,2023-04-10
+10,Robinsonville General Hospital,North Rhine-Westphalia,Germany,Public Hospital Network,Medium,2022-06-09
+11,West Janettown Medical Center,Bavaria,Germany,Public Hospital Network,Large,2023-09-17
+12,North Ryan General Hospital,North Holland,Netherlands,Public Hospital Network,Small,2023-05-25
+13,South Gail University Hospital,Auvergne-Rhone-Alpes,France,University Hospital,Medium,2023-06-16
+14,Peggyshire Clinic,North Rhine-Westphalia,Germany,University Hospital,Small,2025-02-22
+15,Anthonyhaven Medical Center,Auvergne-Rhone-Alpes,France,Private Clinic,Small,2024-03-12
+16,Lake Alyssa University Hospital,South Holland,Netherlands,Private Clinic,Medium,2023-08-01
+17,North Antoniostad Clinic,Ile-de-France,France,Specialty Center,Large,2025-09-08
+18,Robersonville Clinic,Ile-de-France,France,Public Hospital Network,Small,2024-06-01
+19,Sparksberg Clinic,Hesse,Germany,Public Hospital Network,Large,2024-12-12
+20,Lake Sarah University Hospital,North Holland,Netherlands,Specialty Center,Large,2024-12-25
+21,North Susan Medical Center,Bavaria,Germany,Private Clinic,Small,2024-06-19
+22,Nicholaston General Hospital,Hesse,Germany,University Hospital,Medium,2025-09-23
+23,Stevenborough Clinic,North Rhine-Westphalia,Germany,Private Clinic,Medium,2024-06-20
+24,Christopherberg Clinic,Ile-de-France,France,University Hospital,Small,2023-06-17
+25,South Daniel Clinic,Vienna,Austria,Public Hospital Network,Large,2023-05-09
+26,Johnview Clinic,Auvergne-Rhone-Alpes,France,University Hospital,Medium,2026-02-03
+27,North Alexis University Hospital,Ile-de-France,France,Public Hospital Network,Small,2024-11-11
+28,Rioston General Hospital,Ile-de-France,France,Public Hospital Network,Large,2023-11-24
+29,Port Joshua University Hospital,Vienna,Austria,Private Clinic,Medium,2025-06-06
+30,Matthewberg Medical Center,Zurich,Switzerland,Private Clinic,Medium,2024-11-21
+31,Patriciafurt General Hospital,Bavaria,Germany,Specialty Center,Medium,2023-06-30
+32,New Carl Medical Center,Auvergne-Rhone-Alpes,France,Specialty Center,Large,2024-10-21
+33,East Matthewstad General Hospital,Bavaria,Germany,Public Hospital Network,Large,2022-12-20
+34,Lake Emily General Hospital,North Rhine-Westphalia,Germany,Specialty Center,Medium,2022-07-03
+35,East Stephen General Hospital,Zurich,Switzerland,University Hospital,Medium,2025-07-02
+36,Ericaview General Hospital,South Holland,Netherlands,Public Hospital Network,Small,2024-07-01
+37,Harrisport Clinic,Ile-de-France,France,University Hospital,Large,2023-04-26
+38,North Belinda General Hospital,Zurich,Switzerland,University Hospital,Large,2025-03-25
+39,Gonzaleston Medical Center,Ile-de-France,France,University Hospital,Large,2023-09-13
+40,North Kerri University Hospital,Ile-de-France,France,University Hospital,Small,2023-06-04
+41,North Robertmouth Medical Center,Ile-de-France,France,Private Clinic,Large,2024-02-27
+42,South Julie General Hospital,Zurich,Switzerland,Public Hospital Network,Large,2024-11-30
+43,North Heatherview University Hospital,Hesse,Germany,University Hospital,Small,2025-08-18
+44,Lake Christophermouth General Hospital,North Rhine-Westphalia,Germany,Specialty Center,Large,2024-09-05
+45,East Terrencechester Clinic,North Rhine-Westphalia,Germany,Specialty Center,Small,2023-09-08
+46,East Michaelside General Hospital,Bavaria,Germany,Public Hospital Network,Large,2022-10-27
+47,Lake James General Hospital,Zurich,Switzerland,Private Clinic,Medium,2022-10-10
+48,South Derrick Medical Center,Auvergne-Rhone-Alpes,France,University Hospital,Large,2023-01-03
+49,North Brittany University Hospital,South Holland,Netherlands,University Hospital,Large,2026-02-09
+50,Rachelhaven General Hospital,North Holland,Netherlands,University Hospital,Medium,2025-12-01
+51,Velezville Medical Center,South Holland,Netherlands,Specialty Center,Small,2025-10-20
+52,South Cherylland University Hospital,Ile-de-France,France,University Hospital,Large,2022-10-30
+53,Molinaton University Hospital,Hesse,Germany,Specialty Center,Medium,2026-02-20
+54,North Kennethbury Clinic,Ile-de-France,France,Private Clinic,Small,2022-11-07
+55,Riosfurt General Hospital,North Holland,Netherlands,University Hospital,Medium,2023-01-13
+56,Heidibury Clinic,Zurich,Switzerland,Private Clinic,Medium,2022-12-25
+57,South John Clinic,Hesse,Germany,Public Hospital Network,Medium,2023-07-23
+58,South Scott General Hospital,Auvergne-Rhone-Alpes,France,Specialty Center,Large,2023-12-11
+59,Katherineborough General Hospital,Auvergne-Rhone-Alpes,France,University Hospital,Large,2025-11-19
+60,East Larryview Clinic,Bavaria,Germany,Specialty Center,Small,2023-08-25
+61,Andersonshire General Hospital,South Holland,Netherlands,Public Hospital Network,Small,2022-07-16
+62,Kimberlymouth General Hospital,Ile-de-France,France,Specialty Center,Small,2025-06-30
+63,Melissaton University Hospital,Vienna,Austria,Private Clinic,Large,2024-09-22
+64,Christophertown University Hospital,Hesse,Germany,Specialty Center,Medium,2024-02-11
+65,Port Staceyton Medical Center,North Holland,Netherlands,Public Hospital Network,Medium,2023-10-22
+66,North Noah Medical Center,Hesse,Germany,Specialty Center,Medium,2023-09-28
+67,Conleyburgh University Hospital,Ile-de-France,France,Private Clinic,Small,2024-03-31
+68,Nelsonborough General Hospital,Zurich,Switzerland,Private Clinic,Large,2023-12-29
+69,Melissaberg Clinic,Vienna,Austria,Specialty Center,Large,2024-12-23
+70,Phillipsbury Clinic,North Holland,Netherlands,University Hospital,Medium,2025-04-03
+71,North Alyssatown Medical Center,Vienna,Austria,University Hospital,Medium,2023-12-28
+72,Mitchellstad University Hospital,North Rhine-Westphalia,Germany,Private Clinic,Large,2025-03-26
+73,West Sherry General Hospital,Vienna,Austria,Private Clinic,Large,2024-10-01
+74,Port Scott Clinic,Vienna,Austria,Public Hospital Network,Medium,2023-04-29
+75,New Kathleenville General Hospital,Hesse,Germany,University Hospital,Large,2022-08-27
+76,Lake Shawnstad University Hospital,Zurich,Switzerland,Specialty Center,Small,2026-02-25
+77,Port Charles Clinic,Bavaria,Germany,Private Clinic,Small,2025-07-11
+78,Singhburgh Clinic,Hesse,Germany,University Hospital,Large,2025-05-09
+79,West Joyceshire Clinic,Hesse,Germany,University Hospital,Large,2025-10-30
+80,West Lori Medical Center,North Rhine-Westphalia,Germany,University Hospital,Small,2022-10-20
+81,New Jennifer Medical Center,Zurich,Switzerland,Specialty Center,Small,2023-01-03
+82,New Anna University Hospital,Hesse,Germany,Specialty Center,Medium,2024-05-25
+83,East Brent Medical Center,Hesse,Germany,University Hospital,Small,2024-12-31
+84,Wilsonberg University Hospital,Vienna,Austria,Specialty Center,Small,2023-02-12
+85,Ivanburgh Clinic,Hesse,Germany,Private Clinic,Large,2024-03-22
+86,Castilloton Medical Center,Auvergne-Rhone-Alpes,France,Private Clinic,Small,2023-01-04
+87,New Johntown General Hospital,North Holland,Netherlands,University Hospital,Medium,2023-01-21
+88,Benjaminview Medical Center,Ile-de-France,France,Specialty Center,Small,2022-06-10
+89,Lake Michelle Clinic,Ile-de-France,France,University Hospital,Large,2023-04-12
+90,West Dylan Clinic,North Holland,Netherlands,Specialty Center,Medium,2023-12-13
+91,Michaelfurt Clinic,Ile-de-France,France,Public Hospital Network,Medium,2025-11-19
+92,Kellyport University Hospital,Zurich,Switzerland,University Hospital,Large,2023-08-11
+93,Cantrellburgh General Hospital,Hesse,Germany,Specialty Center,Small,2024-05-07
+94,Lake Tiffany University Hospital,Zurich,Switzerland,University Hospital,Medium,2024-11-21
+95,Colonburgh University Hospital,Ile-de-France,France,Specialty Center,Large,2023-10-31
+96,Snydershire Medical Center,Ile-de-France,France,Private Clinic,Small,2023-05-10
+97,North Robertfurt University Hospital,South Holland,Netherlands,Private Clinic,Medium,2023-03-15
+98,West Gregoryberg Medical Center,Hesse,Germany,Specialty Center,Small,2025-09-13
+99,Brownstad General Hospital,North Holland,Netherlands,University Hospital,Small,2024-04-17
+100,East Kristina Clinic,Zurich,Switzerland,Private Clinic,Small,2024-09-19
+101,Kimberlyburgh University Hospital,Bavaria,Germany,Public Hospital Network,Large,2024-07-01
+102,Diazhaven Medical Center,Zurich,Switzerland,Specialty Center,Large,2025-10-29
+103,Lyonsbury Medical Center,Hesse,Germany,Public Hospital Network,Small,2023-03-02
+104,North Tyler University Hospital,Bavaria,Germany,Specialty Center,Large,2025-06-13
+105,West Natasha Clinic,Ile-de-France,France,Specialty Center,Medium,2025-04-04
+106,Barnettstad University Hospital,North Rhine-Westphalia,Germany,Specialty Center,Medium,2023-08-13
+107,Lake Daniellefort Clinic,Bavaria,Germany,Specialty Center,Small,2025-01-16
+108,West Michaelmouth Clinic,North Rhine-Westphalia,Germany,Public Hospital Network,Large,2022-07-24
+109,North Lauramouth General Hospital,North Holland,Netherlands,Private Clinic,Small,2026-01-15
+110,West Lauren University Hospital,Vienna,Austria,Public Hospital Network,Small,2023-10-31
+111,East Zachary Medical Center,Auvergne-Rhone-Alpes,France,University Hospital,Large,2023-01-25
+112,Lake Douglastown Medical Center,Ile-de-France,France,Public Hospital Network,Medium,2023-06-26
+113,Caldwellport Medical Center,North Rhine-Westphalia,Germany,Public Hospital Network,Large,2025-11-30
+114,Juliechester Medical Center,Bavaria,Germany,Specialty Center,Large,2023-10-24
+115,South Whitney Clinic,North Holland,Netherlands,Public Hospital Network,Large,2024-12-06
+116,Wandaborough Medical Center,North Holland,Netherlands,Specialty Center,Large,2022-07-03
+117,Kimberlyland Medical Center,Zurich,Switzerland,Specialty Center,Small,2023-04-19
+118,Christopherside Clinic,Bavaria,Germany,Public Hospital Network,Small,2026-01-24
+119,Andrewbury Clinic,Ile-de-France,France,University Hospital,Small,2023-06-10
+120,New Adamshire General Hospital,Auvergne-Rhone-Alpes,France,Public Hospital Network,Large,2023-04-27
