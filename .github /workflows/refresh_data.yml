@@ -1,0 +1,41 @@
+name: Weekly Data Refresh
+
+# WHAT THIS FILE DOES:
+# Every Monday at 6am UTC, GitHub automatically spins up a temporary
+# computer, runs our data generation script on it, and if the data
+# changed, commits and pushes the updated CSVs back to this repo —
+# all without you touching your own laptop.
+#
+# "workflow_dispatch" below also lets you trigger this manually from
+# GitHub's Actions tab, useful for testing without waiting for Monday.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # minute hour day month day-of-week — 6am every Monday
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install faker pandas
+
+      - name: Regenerate the dataset
+        run: python scripts/generate_meridian_data.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "Automated weekly data refresh"
+          git push

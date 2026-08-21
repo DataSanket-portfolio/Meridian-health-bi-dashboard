@@ -1,214 +1,259 @@
+"""
+Meridian Health Devices — synthetic data generator
+Matches the star schema in docs/schema.md:
+  FactSales, DimDate, DimProduct, DimHospital, DimSalesRep
+
+Run from your project's ROOT folder (not inside /scripts):
+    python3 scripts/generate_meridian_data.py
+
+Output: CSV files written to data/ (FactSales.csv, DimDate.csv,
+DimProduct.csv, DimHospital.csv, DimSalesRep.csv)
+
+NOTE ON RANDOMNESS: this script deliberately has NO fixed random seed.
+Every time it runs, it generates genuinely different numbers. That's
+intentional — it's what makes the Day 6 GitHub Actions "weekly refresh"
+workflow meaningful. A seeded script would produce identical data every
+run, which wouldn't demonstrate anything actually refreshing.
+"""
+
 import random
 from datetime import date, timedelta
 from faker import Faker
 
-fake = Faker()
-Faker.seed(101)
-random.seed(101)
+fake = Faker("de_DE")  # German-flavored names/addresses to match the MedTech/DACH target market
+# No Faker.seed() / random.seed() on purpose — see note above.
 
-# ============================================
-# DimDate — every day from 2023-01-01 to 2026-08-01
-# ============================================
+# ============================================================
+# DimDate — one row per calendar day, last 2 years through today
+# ============================================================
+START_DATE = date.today() - timedelta(days=730)
+END_DATE = date.today()
+
+DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+               "July", "August", "September", "October", "November", "December"]
+
+GERMAN_HOLIDAYS = {(1, 1), (5, 1), (10, 3), (12, 25), (12, 26)}
+
 dim_date = []
-d = date(2023, 1, 1)
-end = date(2026, 8, 1)
+d = START_DATE
 date_id = 1
-while d <= end:
-    day_name = d.strftime('%A')
-    is_weekend = d.weekday() >= 5
-    month_name = d.strftime('%B')
-    month_number = d.month
-    quarter = f"Q{(d.month-1)//3 + 1}"
-    year = d.year
-    fiscal_year = f"FY{year}"  # assumption: fiscal year = calendar year
-    # a handful of simple fixed holidays (not exhaustive, illustrative)
-    is_holiday = (d.month, d.day) in [(1,1), (12,25), (12,26), (10,3)]  # New Year, Christmas, German Unity Day
-    dim_date.append((date_id, d, day_name, is_weekend, is_holiday, month_name, month_number, quarter, year, fiscal_year))
+date_id_lookup = {}
+while d <= END_DATE:
+    quarter = f"Q{((d.month - 1) // 3) + 1}"
+    dim_date.append({
+        "date_id": date_id,
+        "full_date": d.isoformat(),
+        "day_name": DAY_NAMES[d.weekday()],
+        "is_weekend": d.weekday() >= 5,
+        "is_holiday": (d.month, d.day) in GERMAN_HOLIDAYS,
+        "month_name": MONTH_NAMES[d.month - 1],
+        "month_number": d.month,
+        "quarter": quarter,
+        "year": d.year,
+        "fiscal_year": f"FY{d.year}",
+    })
+    date_id_lookup[d] = date_id
     date_id += 1
     d += timedelta(days=1)
 
-date_lookup = {row[1]: row[0] for row in dim_date}  # full_date -> date_id
+# ============================================================
+# DimProduct — medical device / consumable catalog
+# ============================================================
+PRODUCT_CATALOG = [
+    ("ScanPro X200", "Imaging", 42000.00, 28500.00),
+    ("ScanPro X200 Mini", "Imaging", 24500.00, 16800.00),
+    ("UltraView C3", "Imaging", 18900.00, 12200.00),
+    ("VitalTrack Monitor M5", "Monitoring Equipment", 3200.00, 1950.00),
+    ("VitalTrack Monitor M5 Pro", "Monitoring Equipment", 4600.00, 2900.00),
+    ("PulseGuard Wearable", "Monitoring Equipment", 850.00, 480.00),
+    ("RapidDx Analyzer", "Diagnostics", 15600.00, 10100.00),
+    ("RapidDx Test Cartridge (Box of 50)", "Consumables", 340.00, 190.00),
+    ("SteriSeal Surgical Kit", "Consumables", 210.00, 130.00),
+    ("SteriSeal Surgical Kit Pro", "Consumables", 285.00, 175.00),
+    ("InfuseFlow Pump", "Monitoring Equipment", 5400.00, 3600.00),
+    ("InfuseFlow Tubing Set (Pack of 20)", "Consumables", 95.00, 52.00),
+    ("BioSample Centrifuge", "Diagnostics", 9800.00, 6300.00),
+    ("BioSample Test Strips (Box of 100)", "Consumables", 120.00, 68.00),
+    ("NeoCare Incubator", "Monitoring Equipment", 22500.00, 15400.00),
+    ("MobiScan Handheld Ultrasound", "Imaging", 11200.00, 7400.00),
+    ("ClearView Endoscope", "Diagnostics", 13800.00, 9200.00),
+    ("GlucoTrack Sensor Pack (Box of 30)", "Consumables", 180.00, 98.00),
+]
 
-# ============================================
-# DimProduct
-# ============================================
-categories = {
-    'Diagnostic Devices': ['ScanPro X200', 'ScanPro X400', 'PulseCheck Mini', 'PulseCheck Pro', 'VitalTrack Home'],
-    'Surgical Instruments': ['PrecisionBlade S1', 'PrecisionBlade S2', 'ClampMaster', 'SutureKit Advanced'],
-    'Consumables': ['SteriGlove Box-100', 'SteriGlove Box-200', 'IV Line Set', 'Wound Dressing Pack'],
-    'Monitoring Equipment': ['CardioMonitor 3000', 'CardioMonitor 5000', 'O2 Sensor Clip', 'RemoteVitals Hub'],
-    'Mobility Aids': ['FlexWalk Cane', 'FlexWalk Frame', 'GlideChair Standard', 'GlideChair Deluxe'],
-}
 dim_product = []
-pid = 1
-for cat, names in categories.items():
-    for n in names:
-        unit_cost = round(random.uniform(15, 900), 2)
-        list_price = round(unit_cost * random.uniform(1.4, 2.2), 2)
-        dim_product.append((pid, n, cat, list_price, unit_cost))
-        pid += 1
+for i, (name, cat, list_price, unit_cost) in enumerate(PRODUCT_CATALOG, start=1):
+    dim_product.append({
+        "product_id": i,
+        "product_name": name,
+        "product_category": cat,
+        "list_price": list_price,
+        "unit_cost": unit_cost,
+    })
 
-# ============================================
-# DimHospital
-# ============================================
-regions_countries = {
-    'Bavaria': 'Germany', 'North Rhine-Westphalia': 'Germany', 'Hesse': 'Germany',
-    'Ile-de-France': 'France', 'Auvergne-Rhone-Alpes': 'France',
-    'North Holland': 'Netherlands', 'South Holland': 'Netherlands',
-    'Vienna': 'Austria', 'Zurich': 'Switzerland',
+# ============================================================
+# DimHospital — customer hospitals across German-speaking regions
+# ============================================================
+REGIONS = {
+    "Bavaria": ["Munich", "Nuremberg", "Augsburg", "Regensburg"],
+    "North Rhine-Westphalia": ["Cologne", "Dusseldorf", "Dortmund", "Essen"],
+    "Baden-Wurttemberg": ["Stuttgart", "Mannheim", "Freiburg"],
+    "Berlin": ["Berlin"],
+    "Hesse": ["Frankfurt", "Wiesbaden"],
 }
-hospital_types = ['Private Clinic', 'University Hospital', 'Public Hospital Network', 'Specialty Center']
-org_sizes = ['Small', 'Medium', 'Large']
+HOSPITAL_TYPES = ["General Hospital", "University Hospital", "Specialty Clinic", "Private Practice Group"]
+ORG_SIZES = ["Small", "Medium", "Large"]
+HOSPITAL_SUFFIXES = ["Klinikum", "Krankenhaus", "Medical Center", "Universitatsklinik", "Klinik"]
 
 dim_hospital = []
-for hid in range(1, 121):
-    region = random.choice(list(regions_countries.keys()))
-    country = regions_countries[region]
-    customer_since = fake.date_between(start_date=date(2022,6,1), end_date=date(2026,3,1))
-    dim_hospital.append((
-        hid, f"{fake.city()} {random.choice(['General Hospital','Medical Center','Clinic','University Hospital'])}",
-        region, country, random.choice(hospital_types), random.choice(org_sizes), customer_since
-    ))
+hospital_id = 1
+for region, cities in REGIONS.items():
+    n_hospitals = random.randint(6, 9)
+    for _ in range(n_hospitals):
+        city = random.choice(cities)
+        suffix = random.choice(HOSPITAL_SUFFIXES)
+        name = f"{city} {suffix}"
+        org_size = random.choices(ORG_SIZES, weights=[0.35, 0.4, 0.25])[0]
+        htype = random.choices(HOSPITAL_TYPES, weights=[0.4, 0.15, 0.3, 0.15])[0]
+        customer_since = fake.date_between(start_date="-6y", end_date="-3m")
+        dim_hospital.append({
+            "hospital_id": hospital_id,
+            "hospital_name": name,
+            "region": region,
+            "country": "Germany",
+            "hospital_type": htype,
+            "organization_size": org_size,
+            "customer_since": customer_since.isoformat(),
+        })
+        hospital_id += 1
 
-# ============================================
+# ============================================================
 # DimSalesRep
-# ============================================
-dim_salesrep = []
-for rid in range(1, 13):
-    employed_since = fake.date_between(start_date='-6y', end_date='-3m')
-    dim_salesrep.append((rid, fake.name(), random.choice(list(regions_countries.keys())), employed_since))
+# ============================================================
+dim_sales_rep = []
+sales_rep_id = 1
+for region in REGIONS.keys():
+    n_reps = random.randint(2, 3)
+    for _ in range(n_reps):
+        dim_sales_rep.append({
+            "sales_rep_id": sales_rep_id,
+            "rep_name": fake.name(),
+            "region": region,
+            "employed_since": fake.date_between(start_date="-5y", end_date="-6m").isoformat(),
+        })
+        sales_rep_id += 1
 
-# ============================================
-# FactSales — one row per product line within a sale
-# ============================================
+hospitals_by_region = {}
+for h in dim_hospital:
+    hospitals_by_region.setdefault(h["region"], []).append(h["hospital_id"])
+
+reps_by_region = {}
+for r in dim_sales_rep:
+    reps_by_region.setdefault(r["region"], []).append(r["sales_rep_id"])
+
+# ============================================================
+# FactSales — grain: one row per product-line within a transaction
+# ============================================================
 fact_sales = []
-sale_id = 1
 sale_line_id = 1
-current = date(2023, 1, 1)
+sale_id = 1
 
-while current <= end:
-    # simulate seasonal dip in Jul/Aug
-    n_sales_today = random.randint(0, 4)
-    if current.month in (7, 8):
-        n_sales_today = random.randint(0, 2)
 
-    for _ in range(n_sales_today):
-        hospital = random.choice(dim_hospital)
-        rep = random.choice(dim_salesrep)
-        d_id = date_lookup[current]
-        n_lines = random.randint(1, 4)
-        chosen_products = random.sample(dim_product, n_lines)
-        for prod in chosen_products:
-            qty = random.randint(1, 25)
-            discount = random.choice([0, 0, 0, 0.05, 0.1, 0.15])
-            unit_price = prod[3]  # usually matches list_price, occasionally negotiated lower
-            if random.random() < 0.2:
-                unit_price = round(unit_price * random.uniform(0.85, 0.98), 2)
-            fact_sales.append((
-                sale_line_id, sale_id, d_id, prod[0], hospital[0], rep[0],
-                qty, unit_price, prod[4], discount
-            ))
-            sale_line_id += 1
-        sale_id += 1
-    current += timedelta(days=1)
+def month_seasonality_weight(month_number):
+    if month_number in (10, 11, 12):
+        return 1.6
+    if month_number == 8:
+        return 0.5
+    return 1.0
 
-def sqlval(v):
-    if v is None:
-        return 'NULL'
-    if isinstance(v, bool):
-        return '1' if v else '0'
-    if isinstance(v, (int, float)):
-        return str(v)
-    if isinstance(v, date):
-        return f"'{v.isoformat()}'"
-    s = str(v).replace("'", "''")
-    return f"'{s}'"
 
-with open('/home/claude/meridian_data.sql', 'w') as f:
-    f.write("-- Meridian Health Devices — Full Star Schema Dataset\n")
-    f.write("-- Import via MySQL Workbench: File > Open SQL Script > run whole file\n\n")
-    f.write("CREATE DATABASE IF NOT EXISTS meridian_dw;\nUSE meridian_dw;\n\n")
-    f.write("DROP TABLE IF EXISTS FactSales;\nDROP TABLE IF EXISTS DimDate;\nDROP TABLE IF EXISTS DimProduct;\nDROP TABLE IF EXISTS DimHospital;\nDROP TABLE IF EXISTS DimSalesRep;\n\n")
+ANOMALY_SPIKE_START = date(END_DATE.year, END_DATE.month, 1) - timedelta(days=200)
+ANOMALY_SPIKE_END = ANOMALY_SPIKE_START + timedelta(days=10)
+ANOMALY_DIP_START = date(END_DATE.year, END_DATE.month, 1) - timedelta(days=430)
+ANOMALY_DIP_END = ANOMALY_DIP_START + timedelta(days=14)
 
-    f.write("""CREATE TABLE DimDate (
-    date_id INT PRIMARY KEY,
-    full_date DATE,
-    day_name VARCHAR(10),
-    is_weekend BOOLEAN,
-    is_holiday BOOLEAN,
-    month_name VARCHAR(10),
-    month_number INT,
-    quarter VARCHAR(2),
-    year INT,
-    fiscal_year VARCHAR(6)
-);\n\n""")
+weighted_days = []
+for row in dim_date:
+    d_obj = date.fromisoformat(row["full_date"])
+    if row["is_weekend"]:
+        continue
+    weight = month_seasonality_weight(row["month_number"])
+    if ANOMALY_SPIKE_START <= d_obj <= ANOMALY_SPIKE_END:
+        weight *= 4.0
+    if ANOMALY_DIP_START <= d_obj <= ANOMALY_DIP_END:
+        weight *= 0.15
+    weighted_days.extend([row["full_date"]] * int(weight * 10))
 
-    f.write("""CREATE TABLE DimProduct (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(100),
-    product_category VARCHAR(50),
-    list_price DECIMAL(10,2),
-    unit_cost DECIMAL(10,2)
-);\n\n""")
+TARGET_TRANSACTIONS = 2200
 
-    f.write("""CREATE TABLE DimHospital (
-    hospital_id INT PRIMARY KEY,
-    hospital_name VARCHAR(150),
-    region VARCHAR(50),
-    country VARCHAR(50),
-    hospital_type VARCHAR(50),
-    organization_size VARCHAR(20),
-    customer_since DATE
-);\n\n""")
+for _ in range(TARGET_TRANSACTIONS):
+    full_date = random.choice(weighted_days)
+    date_id = date_id_lookup[date.fromisoformat(full_date)]
 
-    f.write("""CREATE TABLE DimSalesRep (
-    sales_rep_id INT PRIMARY KEY,
-    rep_name VARCHAR(100),
-    region VARCHAR(50),
-    employed_since DATE
-);\n\n""")
+    region = random.choice(list(REGIONS.keys()))
+    hospital_id = random.choice(hospitals_by_region[region])
+    sales_rep_id = random.choice(reps_by_region[region])
 
-    f.write("""CREATE TABLE FactSales (
-    sale_line_id INT PRIMARY KEY,
-    sale_id INT,
-    date_id INT,
-    product_id INT,
-    hospital_id INT,
-    sales_rep_id INT,
-    quantity INT,
-    unit_price DECIMAL(10,2),
-    unit_cost DECIMAL(10,2),
-    discount DECIMAL(4,2),
-    FOREIGN KEY (date_id) REFERENCES DimDate(date_id),
-    FOREIGN KEY (product_id) REFERENCES DimProduct(product_id),
-    FOREIGN KEY (hospital_id) REFERENCES DimHospital(hospital_id),
-    FOREIGN KEY (sales_rep_id) REFERENCES DimSalesRep(sales_rep_id)
-);\n\n""")
+    n_line_items = random.choices([1, 2, 3, 4], weights=[0.45, 0.3, 0.15, 0.1])[0]
+    products_in_this_sale = random.sample(dim_product, k=min(n_line_items, len(dim_product)))
 
-    f.write("INSERT INTO DimDate (date_id, full_date, day_name, is_weekend, is_holiday, month_name, month_number, quarter, year, fiscal_year) VALUES\n")
-    f.write(",\n".join(f"({r[0]}, {sqlval(r[1])}, {sqlval(r[2])}, {sqlval(r[3])}, {sqlval(r[4])}, {sqlval(r[5])}, {r[6]}, {sqlval(r[7])}, {r[8]}, {sqlval(r[9])})" for r in dim_date))
-    f.write(";\n\n")
+    for product in products_in_this_sale:
+        quantity = random.choices([1, 2, 3, 5, 10, 25, 50], weights=[0.25, 0.2, 0.15, 0.15, 0.1, 0.1, 0.05])[0]
+        if product["product_category"] != "Consumables":
+            quantity = 1 if random.random() < 0.85 else 2
 
-    f.write("INSERT INTO DimProduct (product_id, product_name, product_category, list_price, unit_cost) VALUES\n")
-    f.write(",\n".join(f"({r[0]}, {sqlval(r[1])}, {sqlval(r[2])}, {r[3]}, {r[4]})" for r in dim_product))
-    f.write(";\n\n")
+        discount = random.choices([0.0, 0.05, 0.10, 0.15, 0.20], weights=[0.4, 0.25, 0.2, 0.1, 0.05])[0]
+        unit_price = round(product["list_price"] * (1 - discount), 2)
 
-    f.write("INSERT INTO DimHospital (hospital_id, hospital_name, region, country, hospital_type, organization_size, customer_since) VALUES\n")
-    f.write(",\n".join(f"({r[0]}, {sqlval(r[1])}, {sqlval(r[2])}, {sqlval(r[3])}, {sqlval(r[4])}, {sqlval(r[5])}, {sqlval(r[6])})" for r in dim_hospital))
-    f.write(";\n\n")
+        fact_sales.append({
+            "sale_line_id": sale_line_id,
+            "sale_id": sale_id,
+            "date_id": date_id,
+            "product_id": product["product_id"],
+            "hospital_id": hospital_id,
+            "sales_rep_id": sales_rep_id,
+            "quantity": quantity,
+            "unit_price": unit_price,
+            "unit_cost": product["unit_cost"],
+            "discount": discount,
+        })
+        sale_line_id += 1
 
-    f.write("INSERT INTO DimSalesRep (sales_rep_id, rep_name, region, employed_since) VALUES\n")
-    f.write(",\n".join(f"({r[0]}, {sqlval(r[1])}, {sqlval(r[2])}, {sqlval(r[3])})" for r in dim_salesrep))
-    f.write(";\n\n")
+    sale_id += 1
 
-    # FactSales can be huge — write in batches
-    f.write("INSERT INTO FactSales (sale_line_id, sale_id, date_id, product_id, hospital_id, sales_rep_id, quantity, unit_price, unit_cost, discount) VALUES\n")
-    f.write(",\n".join(f"({r[0]}, {r[1]}, {r[2]}, {r[3]}, {r[4]}, {r[5]}, {r[6]}, {r[7]}, {r[8]}, {r[9]})" for r in fact_sales))
-    f.write(";\n")
+# ---- realistic messiness ----
+for row in fact_sales:
+    if random.random() < 0.02:
+        row["discount"] = ""
 
-print(f"DimDate: {len(dim_date)} rows")
-print(f"DimProduct: {len(dim_product)} rows")
-print(f"DimHospital: {len(dim_hospital)} rows")
-print(f"DimSalesRep: {len(dim_salesrep)} rows")
-print(f"FactSales: {len(fact_sales)} rows")
-print(f"Total sale transactions: {sale_id - 1}")
+for row in dim_hospital:
+    if random.random() < 0.01:
+        row["organization_size"] = ""
+
+# ============================================================
+# Write CSVs — PascalCase filenames to match what's already in your
+# repo and what ai_insights.py expects (data/FactSales.csv, etc.)
+# ============================================================
+import csv
+import os
+
+OUT_DIR = "data"
+os.makedirs(OUT_DIR, exist_ok=True)
+
+
+def write_csv(filename, rows, fieldnames):
+    path = os.path.join(OUT_DIR, filename)
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"Wrote {len(rows):,} rows -> {path}")
+
+
+write_csv("DimDate.csv", dim_date, list(dim_date[0].keys()))
+write_csv("DimProduct.csv", dim_product, list(dim_product[0].keys()))
+write_csv("DimHospital.csv", dim_hospital, list(dim_hospital[0].keys()))
+write_csv("DimSalesRep.csv", dim_sales_rep, list(dim_sales_rep[0].keys()))
+write_csv("FactSales.csv", fact_sales, list(fact_sales[0].keys()))
+
+print("\nDone. All 5 CSVs match the schema in docs/schema.md.")
